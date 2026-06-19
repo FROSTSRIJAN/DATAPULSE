@@ -490,6 +490,45 @@ export default function Landing() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const [activeSection, setActiveSection] = useState("");
+
+  const navItems = [
+    { id: "capabilities", label: "Capabilities" },
+    { id: "process", label: "Process" },
+    { id: "infra", label: "Infra" },
+    { id: "integrations", label: "Integrations" },
+    { id: "security", label: "Security" }
+  ];
+
+  // Scroll detection for active sections
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY < 300) {
+        setActiveSection("");
+        return;
+      }
+
+      const sections = ["capabilities", "process", "infra", "integrations", "security"];
+      const scrollPosition = window.scrollY + 250; // Offset for trigger
+
+      for (const sectionId of sections) {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(sectionId);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Process section states (Step auto-advances every 6s)
   const [activeStep, setActiveStep] = useState(0);
   const [progressPercent, setProgressPercent] = useState(0);
@@ -664,42 +703,43 @@ export default function Landing() {
             DATAPULSE<span className="text-[9px] text-zinc-500 align-super">TM</span>
           </a>
 
-          <nav className="hidden md:flex items-center gap-8 text-xs font-mono text-zinc-400">
-            <a
-              href="#capabilities"
-              onClick={(e) => handleSmoothScroll(e, "capabilities")}
-              className="hover:text-[#eca8d6] transition-colors relative py-1"
-            >
-              Capabilities
-            </a>
-            <a
-              href="#process"
-              onClick={(e) => handleSmoothScroll(e, "process")}
-              className="hover:text-[#eca8d6] transition-colors relative py-1"
-            >
-              Process
-            </a>
-            <a
-              href="#infra"
-              onClick={(e) => handleSmoothScroll(e, "infra")}
-              className="hover:text-[#eca8d6] transition-colors relative py-1"
-            >
-              Infra
-            </a>
-            <a
-              href="#integrations"
-              onClick={(e) => handleSmoothScroll(e, "integrations")}
-              className="hover:text-[#eca8d6] transition-colors relative py-1"
-            >
-              Integrations
-            </a>
-            <a
-              href="#security"
-              onClick={(e) => handleSmoothScroll(e, "security")}
-              className="hover:text-[#eca8d6] transition-colors relative py-1"
-            >
-              Security
-            </a>
+          <nav className="hidden md:flex items-center gap-8 text-xs font-mono text-zinc-400 relative">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={(e) => {
+                    handleSmoothScroll(e, item.id);
+                    setActiveSection(item.id);
+                  }}
+                  className={`hover:text-[#eca8d6] transition-colors relative py-1 ${
+                    isActive ? "text-[#eca8d6]" : "text-zinc-400"
+                  }`}
+                >
+                  {item.label}
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeTabGlow"
+                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#eca8d6] rounded-full"
+                      initial={false}
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 30,
+                      }}
+                    >
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[2px] bg-[#eca8d6]">
+                        <div className="absolute w-12 h-6 bg-[#eca8d6]/35 rounded-full blur-md -top-3 -left-2" />
+                        <div className="absolute w-8 h-4 bg-[#eca8d6]/20 rounded-full blur-sm -top-2" />
+                        <div className="absolute w-4 h-2 bg-[#eca8d6]/40 rounded-full blur-xs -top-1 left-2" />
+                      </div>
+                    </motion.div>
+                  )}
+                </a>
+              );
+            })}
           </nav>
 
           <div className="hidden md:flex items-center gap-6 text-xs">
@@ -731,11 +771,21 @@ export default function Landing() {
 
         {isMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 flex flex-col gap-4 border-t border-zinc-800/80 pt-4 font-mono text-xs px-6">
-            <a href="#capabilities" onClick={(e) => handleSmoothScroll(e, "capabilities")} className="text-zinc-400 py-1">Capabilities</a>
-            <a href="#process" onClick={(e) => handleSmoothScroll(e, "process")} className="text-zinc-400 py-1">Process</a>
-            <a href="#infra" onClick={(e) => handleSmoothScroll(e, "infra")} className="text-zinc-400 py-1">Infra</a>
-            <a href="#integrations" onClick={(e) => handleSmoothScroll(e, "integrations")} className="text-zinc-400 py-1">Integrations</a>
-            <a href="#security" onClick={(e) => handleSmoothScroll(e, "security")} className="text-zinc-400 py-1">Security</a>
+            {navItems.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={(e) => {
+                  handleSmoothScroll(e, item.id);
+                  setActiveSection(item.id);
+                }}
+                className={`py-1 transition-colors ${
+                  activeSection === item.id ? "text-[#eca8d6]" : "text-zinc-400"
+                }`}
+              >
+                {item.label}
+              </a>
+            ))}
             <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-zinc-800/80">
               <Link to="/login" className="text-zinc-400 py-1">Sign in</Link>
               {user ? (
