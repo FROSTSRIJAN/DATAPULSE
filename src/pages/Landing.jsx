@@ -4,41 +4,52 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 
-// Cycling word with per-letter blur-in and gradient animations
+// Cycling typewriter word component
 function CyclingWord() {
-  const words = ["validate", "diagnose", "clean", "scale"];
-  const [index, setIndex] = useState(0);
+  const phrases = [
+    "validates instantly.",
+    "detects schema drift.",
+    "cleans dirty datasets.",
+    "trusts your data."
+  ];
+  const [currentPhraseIdx, setCurrentPhraseIdx] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % words.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
+    let timer;
+    const phrase = phrases[currentPhraseIdx];
 
-  const word = words[index];
+    if (isDeleting) {
+      if (displayText.length > 0) {
+        timer = setTimeout(() => {
+          setDisplayText(phrase.substring(0, displayText.length - 1));
+        }, 35);
+      } else {
+        setIsDeleting(false);
+        setCurrentPhraseIdx((prev) => (prev + 1) % phrases.length);
+      }
+    } else {
+      if (displayText.length < phrase.length) {
+        timer = setTimeout(() => {
+          setDisplayText(phrase.substring(0, displayText.length + 1));
+        }, 60);
+      } else {
+        timer = setTimeout(() => {
+          setIsDeleting(true);
+        }, 2000);
+      }
+    }
+
+    return () => clearTimeout(timer);
+  }, [displayText, isDeleting, currentPhraseIdx]);
 
   return (
     <span className="inline-block min-w-[200px] sm:min-w-[250px] lg:min-w-[320px] text-left">
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={word}
-          initial="hidden"
-          animate="visible"
-          exit="hidden"
-          className="inline-block word-gradient font-display text-stroke"
-        >
-          {word.split("").map((char, i) => (
-            <motion.span
-              key={i}
-              className="char-reveal"
-              style={{ animationDelay: `${i * 0.03}s` }}
-            >
-              {char}
-            </motion.span>
-          ))}
-        </motion.span>
-      </AnimatePresence>
+      <span className="inline-block word-gradient font-display text-stroke">
+        {displayText}
+        <span className="animate-pulse text-[#eca8d6] font-sans font-light">|</span>
+      </span>
     </span>
   );
 }
@@ -109,14 +120,6 @@ export default function Landing() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navItems = [
-    { label: "Capabilities" },
-    { label: "Process" },
-    { label: "Infra" },
-    { label: "Integrations" },
-    { label: "Security" }
-  ];
-
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-[#060608] text-zinc-100 font-sans selection:bg-pink-300 selection:text-[#060608] w-full">
       {/* Noise Overlay */}
@@ -141,17 +144,6 @@ export default function Landing() {
           >
             DATAPULSE<span className="text-[10px] text-zinc-500 align-super">TM</span>
           </a>
-
-          <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-10 text-[13.5px] font-mono text-zinc-400">
-            {navItems.map((item, idx) => (
-              <span
-                key={idx}
-                className="text-zinc-400 py-1 cursor-default select-none"
-              >
-                {item.label}
-              </span>
-            ))}
-          </nav>
 
           <div className="hidden md:flex items-center gap-8 text-[13.5px]">
             <Link to="/login" className="text-zinc-400 hover:text-white transition-colors font-medium">
@@ -182,15 +174,7 @@ export default function Landing() {
 
         {isMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 flex flex-col gap-4 border-t border-zinc-800/80 pt-4 font-mono text-xs px-6">
-            {navItems.map((item, idx) => (
-              <span
-                key={idx}
-                className="py-1 text-zinc-400 cursor-default select-none"
-              >
-                {item.label}
-              </span>
-            ))}
-            <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-zinc-800/80">
+            <div className="flex flex-col gap-3 mt-4 pt-4">
               <Link to="/login" className="text-zinc-400 py-1">Sign in</Link>
               {user ? (
                 <Link to="/dashboard">
@@ -207,7 +191,7 @@ export default function Landing() {
       </header>
 
       {/* ── SECTION 2: HERO ──────────────────────────────────────── */}
-      <section className="relative min-h-screen w-full flex flex-col justify-between pt-32 pb-16 overflow-hidden bg-[#060608] z-10">
+      <section className="relative min-h-screen w-full flex flex-col justify-center overflow-hidden bg-[#060608] z-10 pt-24 pb-16">
         {/* Background Looping Video */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <video
@@ -231,50 +215,54 @@ export default function Landing() {
           }} />
         </div>
 
-        <div className="max-w-[1440px] ml-auto mr-auto w-full px-4 sm:px-5 md:px-8 relative z-10 flex-grow flex items-center">
-          {/* Content Block */}
-          <div className="max-w-4xl flex flex-col justify-center text-left">
-            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 mb-6 block">
-              — Autonomous data intelligence for enterprise databases
-            </span>
-            <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl leading-[0.95] tracking-tight text-white mb-8 font-light">
-              Distributed database,<br />
-              validation that <br className="hidden sm:inline" />
-              <CyclingWord />
-            </h1>
-            <p className="font-sans text-sm sm:text-base leading-relaxed text-zinc-400 max-w-xl mb-12 font-normal">
-              Automatically calculate dynamic trust scores, detect schema drift, and fix database inconsistencies client-side inside a secured sandbox. Zero raw data ever leaves your device.
-            </p>
+        {/* Centered Hero Content Container */}
+        <div className="max-w-[1440px] ml-auto mr-auto px-6 sm:px-10 md:px-20 w-full relative z-10 flex flex-col justify-center items-start text-left flex-grow">
+          {/* Eyebrow text */}
+          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 mb-6 block">
+            — Autonomous data intelligence for enterprise databases
+          </span>
 
-            <div className="flex flex-wrap gap-4">
-              <Link to="/register">
-                <button className="btn px-8 py-4 text-sm font-semibold bg-[#eca8d6] text-[#060608] hover:bg-white hover:text-black transition-colors rounded-full shadow-lg">
-                  Deploy your first validator
-                </button>
-              </Link>
-              <Link to="/login">
-                <button className="btn px-8 py-4 text-sm font-semibold border border-zinc-800 text-zinc-300 hover:border-[#eca8d6] hover:text-white transition-colors rounded-full">
-                  Run Interactive Demo
-                </button>
-              </Link>
-            </div>
+          {/* Main heading */}
+          <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl leading-[0.95] tracking-tight text-white font-light max-w-[700px]">
+            Distributed database,<br />
+            validation that <br className="hidden sm:inline" />
+            <CyclingWord />
+          </h1>
+
+          {/* Description */}
+          <p className="font-sans text-sm sm:text-base leading-relaxed text-zinc-400 font-normal mt-8 max-w-[600px]">
+            Automatically calculate dynamic trust scores, detect schema drift, and fix database inconsistencies client-side inside a secured sandbox. Zero raw data ever leaves your device.
+          </p>
+
+          {/* CTA buttons */}
+          <div className="flex flex-wrap gap-4 mt-8">
+            <Link to="/register">
+              <button className="btn px-8 py-4 text-sm font-semibold bg-[#eca8d6] text-[#060608] hover:bg-white hover:text-black transition-colors rounded-full shadow-lg">
+                Deploy your first validator
+              </button>
+            </Link>
+            <Link to="/login">
+              <button className="btn px-8 py-4 text-sm font-semibold border border-zinc-800 text-zinc-300 hover:border-[#eca8d6] hover:text-white transition-colors rounded-full">
+                Run Interactive Demo
+              </button>
+            </Link>
           </div>
-        </div>
 
-        {/* Stats Row within the same container */}
-        <div className="max-w-[1440px] ml-auto mr-auto w-full px-4 sm:px-5 md:px-8 relative z-10 mt-auto pt-8 border-t border-zinc-900/60">
-          <div className="flex flex-wrap gap-8 lg:gap-16 text-left font-mono">
-            <div>
-              <div className="text-2xl font-bold text-white"><ScrambleNumber end="10M" suffix="+" /></div>
-              <div className="text-[10px] text-zinc-500 uppercase tracking-wider mt-1">records validated</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-white"><ScrambleNumber end="99.7" suffix="%" /></div>
-              <div className="text-[10px] text-zinc-500 uppercase tracking-wider mt-1">schema accuracy</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-white">&lt; <ScrambleNumber end="50" suffix="ms" /></div>
-              <div className="text-[10px] text-zinc-500 uppercase tracking-wider mt-1">execution latency</div>
+          {/* Stats Row within the same container */}
+          <div className="w-full mt-12 pt-8 border-t border-zinc-900/60 max-w-[600px]">
+            <div className="flex flex-wrap gap-8 lg:gap-16 text-left font-mono">
+              <div>
+                <div className="text-2xl font-bold text-white"><ScrambleNumber end="10M" suffix="+" /></div>
+                <div className="text-[10px] text-zinc-500 uppercase tracking-wider mt-1">records validated</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white"><ScrambleNumber end="99.7" suffix="%" /></div>
+                <div className="text-[10px] text-zinc-500 uppercase tracking-wider mt-1">schema accuracy</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">&lt; <ScrambleNumber end="50" suffix="ms" /></div>
+                <div className="text-[10px] text-zinc-500 uppercase tracking-wider mt-1">execution latency</div>
+              </div>
             </div>
           </div>
         </div>
