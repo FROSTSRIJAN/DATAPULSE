@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { signIn, signInWithGoogle, isSupabaseConfigured } from '../lib/supabase';
@@ -6,10 +6,16 @@ import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,7 +106,10 @@ export default function Login() {
               />
             </div>
             <div style={{ marginBottom: 20 }}>
-              <label style={{ fontSize: 12, color: '#a1a1aa', display: 'block', marginBottom: 6, fontWeight: 500 }}>Password</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                <label style={{ fontSize: 12, color: '#a1a1aa', fontWeight: 500, margin: 0 }}>Password</label>
+                <Link to="/forgot-password" style={{ fontSize: 11, color: '#818cf8', textDecoration: 'none' }}>Forgot password?</Link>
+              </div>
               <input
                 className="input"
                 type="password" placeholder="••••••••"

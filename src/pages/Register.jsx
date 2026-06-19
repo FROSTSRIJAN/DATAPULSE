@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { signUp, signInWithGoogle, isSupabaseConfigured } from '../lib/supabase';
@@ -6,11 +6,17 @@ import { useAuth } from '../contexts/AuthContext';
 
 export default function Register() {
   const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
   const [form, setForm] = useState({ fullName: '', email: '', password: '', confirm: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const validate = () => {
     if (!form.fullName.trim()) return 'Full name is required.';

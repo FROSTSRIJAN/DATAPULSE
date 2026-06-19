@@ -38,8 +38,24 @@ export async function signInWithGoogle() {
   if (!supabase) return mockSignIn({ email: 'demo@xeno.ai' });
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: `${window.location.origin}/dashboard` },
+    options: { redirectTo: `${window.location.origin}/auth/callback` },
   });
+  if (error) throw error;
+  return data;
+}
+
+export async function resetPasswordForEmail(email) {
+  if (!supabase) return { message: 'Demo mode reset link sent.' };
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
+  });
+  if (error) throw error;
+  return data;
+}
+
+export async function updatePassword(password) {
+  if (!supabase) return { message: 'Demo mode password updated.' };
+  const { data, error } = await supabase.auth.updateUser({ password });
   if (error) throw error;
   return data;
 }
