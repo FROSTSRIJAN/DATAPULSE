@@ -685,25 +685,25 @@ export default function Landing() {
 
       {/* ── SECTION 1: NAVIGATION ────────────────────────────────── */}
       <header
-        className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 border-b ${
+        className={`fixed top-0 left-0 right-0 w-full z-50 transition-all duration-300 border-b flex items-center ${
           scrolled
-            ? "bg-zinc-950/85 border-zinc-900 backdrop-blur-md py-4 shadow-lg"
-            : "bg-transparent border-transparent py-6"
+            ? "bg-zinc-950/85 border-zinc-900/60 backdrop-blur-md h-[72px] shadow-lg"
+            : "bg-transparent border-transparent h-[80px]"
         }`}
       >
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12 w-full flex items-center justify-between">
+        <div className="max-w-[1600px] mx-auto px-8 lg:px-16 w-full flex items-center justify-between relative">
           <a
             href="#"
             onClick={(e) => {
               e.preventDefault();
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
-            className="flex items-center gap-2 cursor-pointer font-bold tracking-tight text-white uppercase text-sm"
+            className="flex items-center gap-2.5 cursor-pointer font-extrabold tracking-wider text-white uppercase text-base"
           >
-            DATAPULSE<span className="text-[9px] text-zinc-500 align-super">TM</span>
+            DATAPULSE<span className="text-[10px] text-zinc-500 align-super">TM</span>
           </a>
 
-          <nav className="hidden md:flex items-center gap-8 text-xs font-mono text-zinc-400 relative">
+          <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-10 text-[13.5px] font-mono text-zinc-400">
             {navItems.map((item) => {
               const isActive = activeSection === item.id;
               return (
@@ -742,19 +742,19 @@ export default function Landing() {
             })}
           </nav>
 
-          <div className="hidden md:flex items-center gap-6 text-xs">
+          <div className="hidden md:flex items-center gap-8 text-[13.5px]">
             <Link to="/login" className="text-zinc-400 hover:text-white transition-colors font-medium">
               Sign in
             </Link>
             {user ? (
               <Link to="/dashboard">
-                <button className="btn px-5 py-2.5 rounded-full text-xs font-semibold bg-white text-zinc-950 hover:bg-[#eca8d6] transition-colors">
+                <button className="btn px-7 py-3 rounded-full text-[13px] font-semibold bg-[#eca8d6] text-[#060608] hover:bg-white hover:text-black hover:shadow-[0_0_24px_rgba(236,168,214,0.45)] transition-all duration-300">
                   Dashboard
                 </button>
               </Link>
             ) : (
               <Link to="/register">
-                <button className="btn px-5 py-2.5 rounded-full text-xs font-semibold bg-white text-zinc-950 hover:bg-[#eca8d6] transition-colors">
+                <button className="btn px-7 py-3 rounded-full text-[13px] font-semibold bg-[#eca8d6] text-[#060608] hover:bg-white hover:text-black hover:shadow-[0_0_24px_rgba(236,168,214,0.45)] transition-all duration-300">
                   Deploy Validator
                 </button>
               </Link>
