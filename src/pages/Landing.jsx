@@ -565,45 +565,7 @@ export default function Landing() {
     return () => clearInterval(interval);
   }, []);
 
-  // Testimonials state
-  const [testimonialIndex, setTestimonialIndex] = useState(0);
-  const testimonials = [
-    {
-      company: "Meridian Labs",
-      quote: "DataPulse saved us from pushing corrupt transaction records to our BI dashboards. The local sandbox validation is incredibly fast.",
-      author: "Alex Rivera",
-      role: "VP of Engineering",
-      metric: "98% Error Reduction"
-    },
-    {
-      company: "Flux Systems",
-      quote: "We execute large scale database synchronization runs. Calculating custom trust scores locally before mapping has slashed our error rate.",
-      author: "Elena Rostov",
-      role: "Principal Architect",
-      metric: "3.5B+ Records Parsed"
-    },
-    {
-      company: "Beacon AI",
-      quote: "The auto-field mapping accuracy and format detection is excellent. It integrates natively with our existing pipelines in minutes.",
-      author: "Marcus Chen",
-      role: "Lead Data Engineer",
-      metric: "99.99% Pipeline Uptime"
-    },
-    {
-      company: "Prism Analytics",
-      quote: "Privacy is our first priority. Knowing our raw database values are calculated entirely in-browser is a complete game changer.",
-      author: "Sarah Jenkins",
-      role: "Chief Security Officer",
-      metric: "SOC2 Compliance Met"
-    }
-  ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTestimonialIndex((prev) => (prev + 1) % testimonials.length);
-    }, 8000);
-    return () => clearInterval(interval);
-  }, []);
 
   // FAQ Accordion index
   const [faqIndex, setFaqIndex] = useState(-1);
@@ -634,18 +596,7 @@ export default function Landing() {
     }
   ];
 
-  // CTA Section spotlight coordinate
-  const ctaRef = useRef(null);
-  const [ctaCoords, setCtaCoords] = useState({ x: 0, y: 0 });
-  const [ctaHovered, setCtaHovered] = useState(false);
 
-  const handleCTAMouseMove = (e) => {
-    const rect = ctaRef.current.getBoundingClientRect();
-    setCtaCoords({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    });
-  };
 
   const handleSmoothScroll = (e, targetId) => {
     e.preventDefault();
@@ -1428,330 +1379,79 @@ console.log(cleaned.summary());`}
         </div>
       </section>
 
-      {/* ── SECTION 10: TESTIMONIALS ────────────────────────────── */}
-      <section id="testimonials" className="bg-zinc-100 text-[#060608] py-20 lg:py-28 relative overflow-hidden z-20 w-full animate-fade-in">
-        {/* Faint random ASCII quote-mark background */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none font-mono text-[22vw] leading-none text-zinc-950 flex items-center justify-center select-none font-black">
-          &ldquo;&rdquo;
-        </div>
-
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10 flex flex-col justify-between w-full">
-          {/* Eyebrow */}
-          <div className="flex items-center gap-2 mb-12">
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#060608]/70">— Reviews</span>
-          </div>
-
-          {/* Testimonial slider content */}
-          <div className="grid lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-8 text-left">
-              <h3 className="font-display text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-tight mb-8 text-zinc-900 font-normal">
-                &ldquo;{testimonials[testimonialIndex].quote}&rdquo;
-              </h3>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-zinc-900 text-white flex items-center justify-center font-bold text-sm">
-                  {testimonials[testimonialIndex].author[0]}
-                </div>
-                <div>
-                  <h5 className="text-base font-bold text-zinc-950">{testimonials[testimonialIndex].author}</h5>
-                  <p className="text-xs text-zinc-650 font-sans">{testimonials[testimonialIndex].role} @ {testimonials[testimonialIndex].company}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Metric side card */}
-            <div className="lg:col-span-4 p-8 border border-zinc-300 bg-white rounded-[0.25rem] shadow-md h-full">
-              <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-wider block mb-4">proven results</span>
-              <h4 className="text-4xl font-display font-bold text-zinc-950">{testimonials[testimonialIndex].metric}</h4>
-              <p className="text-zinc-500 text-xs mt-2">reported by company operations team post deployment.</p>
-            </div>
-          </div>
-
-          {/* Navigation Controls and Company Chips */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mt-12 pt-8 border-t border-zinc-200">
-            <div className="flex flex-wrap gap-4">
-              {testimonials.map((t, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setTestimonialIndex(idx)}
-                  className={`text-xs font-mono py-1 px-3 border transition-all ${
-                    testimonialIndex === idx
-                      ? "border-zinc-950 bg-zinc-950 text-white font-bold"
-                      : "border-zinc-300 text-zinc-600 hover:border-zinc-950"
-                  }`}
-                  style={{ borderRadius: "0.25rem" }}
-                >
-                  {t.company}
-                </button>
-              ))}
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setTestimonialIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1))}
-                className="w-10 h-10 border border-zinc-300 rounded-full flex items-center justify-center hover:bg-zinc-200 transition-colors"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <button
-                onClick={() => setTestimonialIndex((prev) => (prev + 1) % testimonials.length)}
-                className="w-10 h-10 border border-zinc-300 rounded-full flex items-center justify-center hover:bg-zinc-200 transition-colors"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 11: PRICING ─────────────────────────────────── */}
-      <section id="pricing" className="py-20 lg:py-28 max-w-[1400px] mx-auto px-6 lg:px-12 relative z-20 w-full">
-        {/* Header grid */}
-        <div className="grid lg:grid-cols-12 gap-8 items-end border-b border-zinc-900 pb-12 mb-12">
-          <div className="lg:col-span-8 text-left">
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-zinc-500 mb-4 block">
-              — Pricing
-            </span>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white leading-tight">
-              Pay for / <span className="text-stroke">results.</span>
-            </h2>
-          </div>
-          <div className="lg:col-span-4 relative h-[100px] overflow-hidden lg:block hidden">
-            <img
-              src="/images/footer-bg.png"
-              alt="whale asset mockup"
-              className="w-full h-full object-cover opacity-20 filter grayscale"
-              style={{ maskImage: "linear-gradient(to top, transparent, black)" }}
-            />
-          </div>
-        </div>
-
-        {/* Pricing Plan cards overlapping */}
-        <div className="grid lg:grid-cols-3 gap-8 items-stretch">
-          {/* Explorer */}
-          <div className="p-8 border border-zinc-900 bg-zinc-950/60 rounded-[0.25rem] flex flex-col justify-between min-h-[420px] transition-all hover:border-zinc-800 h-full shadow-lg">
-            <div>
-              <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-wider block mb-6">plan 01</span>
-              <h3 className="text-2xl font-medium text-white mb-2">Explorer</h3>
-              <p className="text-zinc-500 text-xs leading-relaxed mb-8">For developers checking custom schema layouts locally.</p>
-              <div className="mb-8">
-                <span className="text-4xl font-mono font-bold text-white">$0</span>
-                <span className="text-zinc-500 text-xs"> / free tier</span>
-              </div>
-              <ul className="space-y-3.5 text-zinc-400 text-xs font-sans">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-400 shrink-0" /> 1,000 Free tasks</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-400 shrink-0" /> Local browser sandbox validation</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-400 shrink-0" /> Dynamic trust score calculation</li>
-              </ul>
-            </div>
-            <Link to="/register" className="w-full mt-10">
-              <button className="btn btn-outline w-full py-3.5 text-xs font-semibold">Start free tasks</button>
-            </Link>
-          </div>
-
-          {/* Builder */}
-          <div className="p-8 border border-[#eca8d6] bg-zinc-950 rounded-[0.25rem] flex flex-col justify-between min-h-[440px] shadow-2xl relative lg:-translate-y-4 z-10 h-full">
-            <span className="absolute top-4 right-4 bg-[#eca8d6]/10 border border-[#eca8d6]/30 text-[#eca8d6] font-mono text-[9px] py-1 px-3.5 rounded-sm uppercase font-bold tracking-wider">
-              most popular
-            </span>
-            <div>
-              <span className="font-mono text-[10px] text-[#eca8d6] uppercase tracking-wider block mb-6">plan 02</span>
-              <h3 className="text-2xl font-medium text-white mb-2">Builder</h3>
-              <p className="text-zinc-500 text-xs leading-relaxed mb-8">For growing teams building automated database validation pipelines.</p>
-              <div className="mb-8">
-                <span className="text-4xl font-mono font-bold text-white">$65</span>
-                <span className="text-zinc-500 text-xs"> / user / year</span>
-              </div>
-              <ul className="space-y-3.5 text-zinc-400 text-xs font-sans">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#eca8d6] shrink-0" /> 50,000 tasks per month</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#eca8d6] shrink-0" /> Automated database verification pipelines</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#eca8d6] shrink-0" /> Real-time error alerts & notifications</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#eca8d6] shrink-0" /> Team workspaces & collaborative reports</li>
-              </ul>
-            </div>
-            <Link to="/register" className="w-full mt-10">
-              <button className="btn btn-primary w-full py-3.5 text-xs font-semibold">Start builder trial</button>
-            </Link>
-          </div>
-
-          {/* Scale */}
-          <div className="p-8 border border-zinc-900 bg-zinc-950/60 rounded-[0.25rem] flex flex-col justify-between min-h-[420px] transition-all hover:border-zinc-800 h-full shadow-lg">
-            <div>
-              <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-wider block mb-6">plan 03</span>
-              <h3 className="text-2xl font-medium text-white mb-2">Scale</h3>
-              <p className="text-zinc-500 text-xs leading-relaxed mb-8 font-normal">For enterprise operations requiring custom security and SLAs.</p>
-              <div className="mb-8">
-                <span className="text-4xl font-mono font-bold text-white">Custom</span>
-                <span className="text-zinc-500 text-xs"> / enterprise layout</span>
-              </div>
-              <ul className="space-y-3.5 text-zinc-400 text-xs font-sans">
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-500 shrink-0" /> Custom volume processing rules</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-500 shrink-0" /> Dedicated offline support SLA</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-500 shrink-0" /> SOC 2 / HIPAA compliance audits</li>
-                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-500 shrink-0" /> Custom region database sync</li>
-              </ul>
-            </div>
-            <a href="mailto:sales@xeno.ai" className="w-full mt-10">
-              <button className="btn btn-outline w-full py-3.5 text-xs font-semibold">Contact sales</button>
-            </a>
-          </div>
-        </div>
-
-        {/* Bottom compare guarantees */}
-        <div className="mt-12 pt-8 border-t border-zinc-900 flex justify-between items-center flex-wrap gap-4 text-xs text-zinc-500 font-mono">
-          <span>Cancel or switch plans anytime</span>
-          <a href="#" className="hover:text-white transition-colors">Compare all features →</a>
-        </div>
-      </section>
-
-      {/* ── SECTION 12: CTA ────────────────────────────────────── */}
-      <section className="py-20 lg:py-28 max-w-[1400px] mx-auto px-6 lg:px-12 relative z-20 w-full">
-        <div
-          ref={ctaRef}
-          onMouseMove={handleCTAMouseMove}
-          onMouseEnter={() => setCtaHovered(true)}
-          onMouseLeave={() => setCtaHovered(false)}
-          className="relative py-20 px-8 lg:px-16 bg-zinc-950 border border-zinc-900 overflow-hidden flex flex-col lg:flex-row justify-between items-center gap-12 rounded-[0.25rem] w-full shadow-2xl"
+      {/* ── SECTION 10: PREMIUM FINAL CTA ────────────────────────── */}
+      <section className="py-24 lg:py-32 max-w-[1400px] mx-auto px-6 lg:px-12 relative z-20 w-full flex justify-center items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative py-16 px-8 lg:px-16 bg-zinc-950/80 border border-zinc-900 overflow-hidden flex flex-col justify-center items-center text-center rounded-[0.25rem] w-full max-w-4xl shadow-[0_0_50px_rgba(236,168,214,0.03)] backdrop-blur-md"
         >
-          {/* Spotlight background */}
-          {ctaHovered && (
-            <div
-              className="absolute pointer-events-none inset-0 transition-opacity duration-300 z-0"
-              style={{
-                background: `radial-gradient(600px circle at ${ctaCoords.x}px ${ctaCoords.y}px, rgba(236, 168, 214, 0.04), transparent 85%)`,
-              }}
-            />
-          )}
-
+          {/* Subtle pink glow */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(236,168,214,0.06),transparent_70%)] pointer-events-none" />
+          
           {/* Decorative Corner Accents */}
           <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-zinc-800" />
           <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-zinc-800" />
           <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-zinc-800" />
           <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-zinc-800" />
 
-          {/* Left Block */}
-          <div className="text-left max-w-xl relative z-10 flex flex-col justify-center">
-            <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-[0.2em] mb-4 block">— Start</span>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight text-white mb-6 font-normal">
-              Ready to validate <br />
-              your enterprise data?
+          <div className="relative z-10 max-w-2xl flex flex-col items-center">
+            <h2 className="font-display text-4xl sm:text-5xl tracking-tight text-white mb-6 leading-tight">
+              Ready to Trust Your Data?
             </h2>
-            <p className="font-sans text-sm sm:text-base leading-relaxed text-zinc-400 mb-8 font-normal">
-              Enforce schema validation, auto-map headers, and compute trust metrics locally inside our client sandbox. Connect and deploy within minutes.
+            <p className="font-sans text-sm sm:text-base leading-relaxed text-zinc-400 mb-10 max-w-xl font-normal">
+              Upload CSV or XLSX files and receive AI-powered validation, trust scoring, anomaly detection and business readiness insights in seconds.
             </p>
-            <div className="flex flex-wrap gap-4 items-center">
+
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
               <Link to="/register">
-                <button className="btn px-8 py-3.5 text-xs font-bold bg-[#eca8d6] text-[#060608] hover:bg-white hover:text-black transition-colors rounded-full shadow-lg">
-                  Deploy your first validator
+                <button className="btn px-8 py-3.5 text-xs font-semibold bg-[#eca8d6] text-[#060608] hover:bg-white hover:text-black hover:shadow-[0_0_24px_rgba(236,168,214,0.45)] transition-all duration-300 rounded-[0.25rem] w-full sm:w-48">
+                  Start Validation
                 </button>
               </Link>
               <Link to="/login">
-                <button className="btn px-8 py-3.5 text-xs font-semibold border border-zinc-850 text-zinc-300 hover:border-[#eca8d6] hover:text-white transition-colors rounded-full">
-                  Book a demo
+                <button className="btn px-8 py-3.5 text-xs font-semibold border border-zinc-800 text-zinc-300 hover:border-[#eca8d6] hover:text-white transition-all duration-300 rounded-[0.25rem] w-full sm:w-48 bg-transparent">
+                  View Demo
                 </button>
               </Link>
             </div>
-            <span className="font-mono text-[9px] text-zinc-650 mt-6 block uppercase">
-              1,000 free task runs included on new accounts.
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ── SECTION 11: MINIMAL FOOTER ─────────────────────────── */}
+      <footer className="relative z-20 bg-zinc-950 border-t border-zinc-900 w-full py-12">
+        <div className="max-w-[1600px] mx-auto w-full px-8 lg:px-16 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="text-center md:text-left">
+            <span className="text-sm font-extrabold text-white uppercase tracking-wider block mb-1">
+              XENO DataPulse AI
+            </span>
+            <span className="text-[11px] text-zinc-500 font-normal">
+              AI-Powered Transaction Intelligence Platform
             </span>
           </div>
 
-          {/* Right Block image visual */}
-          <div className="w-full lg:w-[40%] h-[240px] overflow-hidden border border-zinc-900 relative rounded-sm bg-zinc-950/20 lg:block hidden">
-            <img
-              src="/images/7aecbceb-cbd3-4cbd-901c-dd0125d41525.png"
-              alt="Connected elements"
-              className="w-full h-full object-cover opacity-35 mix-blend-lighten scale-x-[-1]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-transparent to-zinc-950 z-10" />
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION 13: FOOTER ──────────────────────────────────── */}
-      <footer className="relative z-20 bg-zinc-950 border-t border-zinc-900 w-full py-16 lg:py-24">
-        {/* Landscape Footer Background */}
-        <div className="absolute -top-[25vw] left-0 right-0 w-full h-[50vw] z-0 overflow-hidden pointer-events-none opacity-20">
-          <img src="/images/footer-bg.png" alt="Footer Landscape" className="object-cover w-full h-full grayscale" />
-        </div>
-
-        {/* Large Watermark Title */}
-        <div className="absolute -top-[12vw] left-0 right-0 flex items-end justify-center overflow-visible pointer-events-none z-10 opacity-5">
-          <h2 className="font-bold text-center text-[20vw] leading-[0.85] tracking-tighter text-white whitespace-nowrap font-sans uppercase">
-            DATAPULSE
-          </h2>
-        </div>
-
-        <div className="max-w-[1400px] mx-auto w-full px-6 lg:px-12 relative z-20">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-12 mb-16 text-left">
-            <div className="col-span-2 md:col-span-1">
-              <span className="text-base font-bold text-white uppercase block mb-4 tracking-wider">DATAPULSE™</span>
-              <p className="text-xs text-zinc-500 mb-6 leading-relaxed font-sans font-normal">
-                Secured, client-side database schema validation, trust scoring, and anomaly auto-fixes.
-              </p>
-              <div className="flex gap-4">
-                <a href="#" className="text-zinc-650 hover:text-white transition duration-300">
-                  <Twitter className="w-4 h-4" />
-                </a>
-                <a href="#" className="text-zinc-650 hover:text-white transition duration-300">
-                  <Github className="w-4 h-4" />
-                </a>
-                <a href="#" className="text-zinc-650 hover:text-white transition duration-300">
-                  <Linkedin className="w-4 h-4" />
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="text-xs font-bold text-zinc-100 mb-4 uppercase tracking-wider font-mono">— Product</h4>
-              <ul className="space-y-3 font-sans text-xs text-zinc-500">
-                <li><a href="#" className="hover:text-white transition duration-300">Schema Detect</a></li>
-                <li><a href="#" className="hover:text-white transition duration-300">Trust Scoring</a></li>
-                <li><a href="#" className="hover:text-white transition duration-300">Auto Fix Hub</a></li>
-                <li><a href="#" className="hover:text-white transition duration-300">Integrations</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-xs font-bold text-zinc-100 mb-4 uppercase tracking-wider font-mono">— Developers</h4>
-              <ul className="space-y-3 font-sans text-xs text-zinc-500">
-                <li><a href="#" className="hover:text-white transition duration-300">TypeScript SDK</a></li>
-                <li><a href="#" className="hover:text-white transition duration-300">CLI Package</a></li>
-                <li><a href="#" className="hover:text-white transition duration-300">Sandbox API</a></li>
-                <li><a href="#" className="hover:text-white transition duration-300">System Status</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-xs font-bold text-zinc-100 mb-4 uppercase tracking-wider font-mono">— Company</h4>
-              <ul className="space-y-3 font-sans text-xs text-zinc-500">
-                <li><a href="#" className="hover:text-white transition duration-300">About Us</a></li>
-                <li>
-                  <a href="#" className="hover:text-white transition duration-300 flex items-center gap-1.5">
-                    Careers <span className="text-[9px] bg-zinc-850 text-zinc-400 px-1 rounded-sm border border-zinc-800 font-mono">HIRING</span>
-                  </a>
-                </li>
-                <li><a href="#" className="hover:text-white transition duration-300">Press Kit</a></li>
-                <li><a href="#" className="hover:text-white transition duration-300">Blog Feed</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-xs font-bold text-zinc-100 mb-4 uppercase tracking-wider font-mono">— Legal</h4>
-              <ul className="space-y-3 font-sans text-xs text-zinc-500">
-                <li><a href="#" className="hover:text-white transition duration-300">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition duration-300">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition duration-300">Cookie Rules</a></li>
-                <li><a href="#" className="hover:text-white transition duration-300">Security Disclosures</a></li>
-              </ul>
-            </div>
+          <div className="flex items-center gap-8 text-[12px] font-mono text-zinc-400 flex-wrap justify-center">
+            <a href="https://github.com/FROSTSRIJAN/DATAPULSE" target="_blank" rel="noopener noreferrer" className="hover:text-[#eca8d6] transition-colors">
+              GitHub
+            </a>
+            <a href="#" className="hover:text-[#eca8d6] transition-colors">
+              Documentation
+            </a>
+            <a href="#" className="hover:text-[#eca8d6] transition-colors">
+              Privacy
+            </a>
+            <a href="mailto:contact@xeno.ai" className="hover:text-[#eca8d6] transition-colors">
+              Contact
+            </a>
           </div>
 
-          <div className="pt-8 border-t border-zinc-900/60 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-zinc-600 font-sans">© 2026 DATAPULSE. All rights reserved.</p>
-            <div className="flex items-center gap-2 font-mono text-[9px] text-[#22c55e] bg-green-500/5 border border-green-500/20 px-3 py-1 rounded-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e]" />
-              <span>All validation sandboxes operational</span>
-            </div>
+          <div className="text-center md:text-right">
+            <p className="text-[11px] text-zinc-650">
+              © 2026 XENO DataPulse AI
+            </p>
           </div>
         </div>
       </footer>
